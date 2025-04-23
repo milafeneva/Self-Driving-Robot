@@ -1,0 +1,105 @@
+function detected = checkSpot()
+    % Create a video input object
+    vid = videoinput('winvideo', 1);
+
+    % Open the camera preview
+    preview(vid);
+
+    % Read audio file for countdown
+    [y, Fs] = audioread('countdown.mp3');
+    player = audioplayer(y, Fs);
+    play(player);
+
+    % Countdown from 10 to 1
+    for i = 10:-1:1
+        disp(['Capture in ' num2str(i) ' seconds.']);
+        pause(1);
+    end
+    stop(player);
+
+    % Close the camera preview
+    closepreview(vid);
+
+    % Start the video stream
+    start(vid);
+
+    % Capture an image from the camera
+    image = getsnapshot(vid);
+
+    % Stop the video stream
+    stop(vid);
+    delete(vid);
+
+    % Perform image processing to determine if the red cross or coin is present
+    detected = isObjectPresent(image);
+
+    if detected
+        disp('Red cross detected. The spot is taken.');
+    else
+        disp("Coin detected. The spot is empty.");
+    end
+end
+
+% Function to determine if a red cross or coin is present
+function detected = isObjectPresent(image)
+    %% Image Processing Red Cross
+    % Extract the red, green and blue channels
+    redChannel = image(:, :, 1);
+    greenChannel = image(:, :, 2);
+    blueChannel = image(:, :, 3);
+
+    % Set thresholds for the red, green, and blue channels
+    redThreshold = 150;
+    greenThreshold = 150;
+    blueThreshold = 150;
+
+    % Create binary images based on the thresholds for the red, green, and blue channels
+    redBinary = redChannel > redThreshold;
+    greenBinary = greenChannel < greenThreshold;
+    blueBinary = blueChannel < blueThreshold;
+
+    % Combine the binary images to identify regions with red color
+    redRegions = redBinary & greenBinary & blueBinary;
+
+    % Perform morphological operations to remove noise and fill holes in the binary image
+    cleanBinaryImage = imopen(redRegions, strel('disk', 3));
+    cleanBinaryImage = imclose(cleanBinaryImage, strel('disk', 10));
+    cleanBinaryImage = imfill(cleanBinaryImage, 'holes');
+    
+    % Detect connected components in the binary image
+    cc = bwconncomp(cleanBinaryImage);
+
+    %% Image Processing Coin
+    img2 = rgb2gray(image);
+    img3 = imbinarize(img2, 'adaptive', 'ForegroundPolarity', 'dark', 'Sensitivity', 0.55);
+    img4 = imcomplement(img3);
+    img5 = imclose(img4, strel('disk', 6));
+    img6 = imfill(img5, 'holes');
+
+    [labels, numlabels] = bwlabel(img6);
+    stats = regionprops(labels, 'all');
+
+    circularity = 4 * pi * stats(1).Area / ((stats(1).Perimeter)^2);
+
+    %% Classification
+
+    % If there is only one connected component, check the aspect ratio
+    if cc.NumObjects == 1
+        % Get area information for the connected component
+        stats = regionprops(cc, 'Area');
+        
+        % Set a threshold for the area to distinguish between a single rectangle and two rectangles forming a cross
+        areaThreshold = 100000; % Adjust this threshold as needed
+        
+        % If the area is above the threshold, consider it a cross
+        detected = stats.Area >= areaThreshold;
+    else
+        % If there are multiple connected components, consider it a cross
+        detected = cc.NumObjects >= 2;
+    end
+
+    % Check the circularity of the object
+    if circularity >= 0.85
+        detected = false;
+    end
+end
