@@ -1,0 +1,22 @@
+% Load ECG signal
+ECG_vector = load('ECG-3sec.txt');
+
+% Define time vector
+Fs = 1000;
+Td = 3;
+t = 0:1/Fs:(Td-1/Fs);
+
+% Select 1000 samples
+y = ECG_vector(1:1000);
+
+% Calculate FFT
+fft_vector = fft(y);
+
+% Simplified frequency vector
+f = (0:length(fft_vector)-1) * Fs / length(fft_vector);
+
+% Plot frequency spectrum
+stem(f, abs(fft_vector));
+xlim([0, 60]);
+xlabel('Frequency (Hz)');
+ylabel('Amplitude');
