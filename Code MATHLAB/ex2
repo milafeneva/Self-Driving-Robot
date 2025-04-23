@@ -1,0 +1,39 @@
+% Parameters
+duration = 0.05; % seconds
+Fs = 10000; % Sampling frequency
+
+% Time vector
+t = 0:1/Fs:duration;
+
+% Sinusoidal signals
+f1 = 50;
+f2 = 100;
+signal = sin(2*pi*f1*t) + sin(2*pi*f2*t);
+
+% Frequency Spectrum
+N = length(signal);
+fft_vector = fft(signal, N);
+m = abs(fft_vector);
+halfN = floor(N/2); % Ensure halfN is an integer
+x = (0:halfN-1)*Fs/N;
+m = m(1:halfN);
+
+% Plot Original Signal
+subplot(3,1,1);
+plot(t, signal);
+title('Original Signal');
+xlabel('Time (s)');
+ylabel('Amplitude');
+
+% Plot Frequency Spectrum
+subplot(3,1,2);
+stem(x, m);
+xlim([0, 150]); % Limiting the x-axis for better Spectrum visualisation
+title('Frequency Spectrum');
+xlabel('Frequency (Hz)');
+ylabel('Amplitude');
+
+% Plot Spectrogram
+subplot(3,1,3);
+spectrogram (signal,256,128,256,Fs,'yaxis');
+title('Spectrogram');
