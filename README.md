@@ -1,5 +1,6 @@
 # Self-Driving-Robot
 Creation of an algorithm for controlling the Lego Mindstorm EV3 robot 
+https://drive.google.com/drive/folders/1fdkjAe5p5xFWcE1J2BcoAaH4c_GKoAPC
 
 Overview:
 This project involves the development of an autonomous robot capable of navigating a predefined path marked by a black line (road) using active opto-sensors. The robot is equipped with additional functionalities, including obstacle detection using an ultrasound sensor and the ability to overtake obstacles, as well as an integrated camera for parking spot detection in a designated parking lot.
