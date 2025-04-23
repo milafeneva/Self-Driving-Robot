@@ -25,21 +25,22 @@ Beyond basic navigation, the robot incorporates ultrasound sensors for obstacle 
 Powered by a rule-based line-following algorithm, this project showcases the integration of advanced sensors, rule-based algorithms, and diverse functionalities, positioning it at the forefront of autonomous navigation technology.
 II. Related Work
 What inspired us? 
-Our first inspiration was an article about a car parking monitoring system using wireless sensor networks;
-Here is the link to the article:
-https://publications.waset.org/17079/a-car-parking-monitoring-system-using-wireless-sensor-networks
-Our second inspiration is a real-time obstacle avoidance method for an autonomus vehicle. This new obsticle avoidance method for autonomus vehicles called obstacle-dependent Gaussian potention field was designed and implemented for detacting obstacles. 
-This article inspired us to get more in depth with our first idea, and we came up with an idea for our robot to not just be able to self-park but be able to avoid and over-take obsticles as well. 
-Obstacle avoidance is one of the essential technologies in local path planning and one of the critical technologies that guarantees human and vehicle safety. For decades, many researches have been performed on this theme and many methods have been developed, a few of which have been implemented in real systems. In order to avoid collision with obstacles, a robot needs not only to detect obstacles but also to recalculate the detouring path and to steer itself toward a safe and efficient path in real time.
+Our first inspiration was an article about a car parking monitoring system using wireless sensor networks.
+Here is the link to the article: https://publications.waset.org/17079/a-car-parking-monitoring-system-using-wireless-sensor-networks
+
+Our second inspiration is a real-time obstacle avoidance method for an autonomous vehicle. This new obstacle avoidance method for autonomous vehicles, called obstacle-dependent Gaussian potential field, was designed and implemented for detecting obstacles. 
+This article inspired us to get more in-depth with our first idea, and we came up with an idea for our robot to not just be able to self-park but be able to avoid and overtake obstacles as well. 
+Obstacle avoidance is one of the essential technologies in local path planning and one of the critical technologies that guarantees human and vehicle safety. For decades, many research studies have been performed on this theme and many methods have been developed, a few of which have been implemented in real systems. In order to avoid collision with obstacles, a robot needs not only to detect obstacles but also to recalculate the detouring path and to steer itself toward a safe and efficient path in real time.
 https://www.hindawi.com/journals/jat/2018/5041401/
 This really interesting article was an improved version of our idea for over-taking obsticles. Our vehicle uses sensors in order to recognize the obsticle in front of it. 
 The following picture is a representation of a host vehicle overtaking an obsticle vehicle using a combined action of attraction and repulsion.
 Last article; 
 https://www.frontiersin.org/articles/10.3389/fnbot.2023.1269447/full
-III. Concept of operation 
-the steps we will use in order to get to the final results (use diagrams and scenarios) block diagram 
 
-explanation of formulas and avoiding an obsticle: https://journals.sagepub.com/doi/full/10.1177/17298806221115984 
+III. Concept of operation 
+The steps we will use in order to get to the final results (use diagrams and scenarios) block diagram 
+Explanation of formulas and avoiding an obstacle: https://journals.sagepub.com/doi/full/10.1177/17298806221115984 
+
 IV. System requirements 
 Activity diagram 
  
