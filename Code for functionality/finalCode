@@ -1,0 +1,130 @@
+%% Setup
+myrobot = legoev3('usb');
+mA = motor(myrobot, 'A'); % Left Motor
+mC = motor(myrobot, 'C');% Right Motor
+myColourSensor1 = colorSensor(myrobot,1); % Right color sensor
+myColourSensor2 = colorSensor(myrobot,2); % Left color sensor
+myUltrasonicSensor = sonicSensor(myrobot); % Ultrasonic sensor(distance)
+
+%% Driving
+while true
+    % Get the color data from the sensors using them in Active mode
+    colorRight=readLightIntensity(myColourSensor1,'reflected');
+    colorLeft=readLightIntensity(myColourSensor2,'reflected');
+
+    % Stop
+    % If both sensors see black stop the motors and exit the loop
+    if colorLeft <= 20 && colorRight <= 20
+        stop(mA, 1);
+        stop(mC, 1);
+        break;
+
+    % Forward
+    % If both sensors see white drive forward
+    elseif colorLeft >= 70 && colorRight >= 70
+        mA.Speed = 10;
+        mC.Speed = 10;
+        start(mA);
+        start(mC);
+
+        % Overtake
+        % Check for obstacles and overtake only if the robot is mooving
+        % forward
+        val = readDistance(myUltrasonicSensor);
+        if val < 0.07
+            % Left
+            mA.Speed = 0;
+            mC.Speed = 50;
+            start(mA);
+            start(mC);
+            pause (0.9);
+
+            % Forward
+            mA.Speed = 30;
+            mC.Speed = 30;
+            start(mA);
+            start(mC);
+            pause (0.5);
+
+            % Right
+            mA.Speed = 50;
+            mC.Speed = 0;
+            start(mA);
+            start(mC);
+            pause (1);
+
+            % Forward
+            mA.Speed = 50;
+            mC.Speed = 50;
+            start(mA);
+            start(mC);
+            pause (1);
+
+            % Right
+            mA.Speed = 50;
+            mC.Speed = 0;
+            start(mA);
+            start(mC);
+            pause (1);
+
+            % Forward
+            mA.Speed = 30;
+            mC.Speed = 30;
+            start(mA);
+            start(mC);
+            pause (0.5);
+
+            % Left
+            mA.Speed = 0;
+            mC.Speed = 50;
+            start(mA);
+            start(mC);
+            pause (0.9);
+        end
+
+    % Turn Left
+    elseif colorLeft >= 70 && colorRight < 30
+        mA.Speed = 5;
+        mC.Speed = 75;
+        start(mA);
+        start(mC);
+        
+    % Turn Right
+    elseif colorLeft < 30 && colorRight >= 70
+        mA.Speed = 75;
+        mC.Speed = 5;
+        start(mA);
+        start(mC);
+    end
+end
+
+
+%% Parking
+
+% Declare taken as true in the start, because the robot has to go to the
+% first pot then it calls the checkSpot function that rreturns if the spot
+% is empty or not
+taken = true;
+
+while taken
+    mA.Speed = 18;
+    mC.Speed = 15;
+    start(mA);
+    start(mC);
+    pause (4.5);
+    stop(mA, 1);
+    stop(mC, 1);
+    taken = checkSpot();
+end
+
+% Park the Robot
+mA.Speed = -15;
+start(mA);
+for i = 1:6
+    playTone (myrobot, 440, 1, 5);
+    pause(1);
+end
+stop(mA, 1);
+
+clear myrobot;
+clear;
