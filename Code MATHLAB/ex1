@@ -1,0 +1,70 @@
+function numObjects = ex1()
+
+    % Acquire an image from the webcam
+    vid = videoinput('winvideo', 2);
+    start(vid);
+    preview(vid);
+    
+    % Capture one image and store it
+    im = getsnapshot(vid);
+    stop(vid);
+    delete(vid);
+
+    % Display the original image
+    subplot(3, 3, 1);
+    imshow(im);
+    title('Original Image');
+
+    % Crop the image
+    im = imcrop(im, [100, 5, 479, 399]);
+    subplot(3, 3, 2);
+    imshow(im);
+    title('Cropped Image');
+
+    % Convert the image to grayscale
+    im = rgb2gray(im);
+    subplot(3, 3, 3);
+    imshow(im);
+    title('Grayscale Image');
+
+    % Thresholding to separate objects from the background
+    level = graythresh(im);
+    im = im2bw(im, level);
+    subplot(3, 3, 4);
+    imshow(im);
+    title('Binary Image');
+
+    % Morphological opening to eliminate imperfections
+    im = imopen(im, strel('disk', 4));
+    subplot(3, 3, 5);
+    imshow(im);
+    title('After Morphological Correction');
+
+    % Complement the image
+    im = imcomplement(im);
+    subplot(3, 3, 6);
+    imshow(im);
+    title('Complemented Image');
+
+    % Another opening operation with a larger structuring element
+    im = imopen(im, strel('disk', 50));
+    subplot(3, 3, 7);
+    imshow(im);
+    title('After Second Opening');
+
+    % Connected components labeling
+    [labels, numObjects] = bwlabel(im);
+    subplot(3, 3, 8);
+    im8 = label2rgb(labels);
+    imshow(im8);
+    title('Blobs Displayed in Different Colors');
+
+    % Visualize BLOBs with labels
+    subplot(3, 3, 9);
+    vislabels(labels);
+    title('Blobs with Labels');
+
+    % Display the number of objects found
+    disp(['Number of round objects found: ', num2str(numObjects)]);
+
+end
